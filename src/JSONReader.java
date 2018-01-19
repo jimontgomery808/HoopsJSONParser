@@ -5,6 +5,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,13 +22,18 @@ public class JSONReader
 	public static void main(String[] args) throws JSONException
 	{
 		ReadURL readUrl;
-		String url = "https://data.nba.net/prod/v2/20180117/scoreboard.json";
+		String urlDate;
+		Date date = new Date();
+		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+		urlDate = dateFormat.format(date);
+		String url = "https://data.nba.net/prod/v2/" + urlDate + "/scoreboard.json";
 		String jsonString = null;
 		String jsonStringFinal = null;
 		JSONArray array = null;
 		GameData gameData;
 		int numGames;
 		int startIndex;
+		List<GameData> gameList = new ArrayList<GameData>();
 
         // Show it.
 		
@@ -75,31 +85,72 @@ public class JSONReader
 		    // Nested JSON Object - used for tv chanel info
 		    JSONObject watchInfo = obj.getJSONObject("watch").getJSONObject("broadcast").getJSONObject("broadcasters");
 		    
-		    Object vTeamWatch = watchInfo.get("vTeam");									// visiting team JSON object
-		    Object hTeamWatch = watchInfo.get("hTeam");									// home team JSON object
+		    Object vTeamWatch = watchInfo.get("vTeam");						 // visiting team JSON object
+		    Object hTeamWatch = watchInfo.get("hTeam");						 // home team JSON object
 		    
-		    // split the JSON strings
-		    String hSplitted[] = hTeamWatch.toString().split(":");						
-		    String vSplitted[] = vTeamWatch.toString().split(":");
-		    // remove the quotations and commas
-		    String vWatchShort = vSplitted[1].substring(1, vSplitted[1].length() -12);
-		    String vWatchLong = vSplitted[2].substring(1, vSplitted[2].length()-3);
-		    String hWatchShort = hSplitted[1].substring(1, hSplitted[1].length() -12);
-		    String hWatchLong = hSplitted[2].substring(1, hSplitted[2].length()-3);
+		    // National Broadcast Info
+		    JSONArray ntlBroadcastArray = watchInfo.getJSONArray("national");
+		    String ntlShortName;
+		    String ntlLongName;
+		    if( ntlBroadcastArray.length() != 0)
+		    {
+			    JSONObject ntlBroadcastObj = ntlBroadcastArray.getJSONObject(0);
+			    ntlShortName = ntlBroadcastObj.getString("shortName");
+			    ntlLongName = ntlBroadcastObj.getString("longName");
+		    }
+		    else
+		    {
+		    	ntlShortName = "broadcast not available";
+		    	ntlLongName = "broadcast not available";
+		    }
 		    
+		    // Visiting team broadcast info
+		    JSONArray vTeamBroadCast = watchInfo.getJSONArray("vTeam");
+		    String vShortName = null;
+		    String vLongName = null;
+		    
+		    if(vTeamBroadCast.length() != 0)
+		    {
+			    JSONObject vTeamBroadcastObj = vTeamBroadCast.getJSONObject(0);
+			    vShortName = vTeamBroadcastObj.getString("shortName");
+			    vLongName = vTeamBroadcastObj.getString("longName");
+		    }
+		    else
+		    {
+		    	vShortName = ntlShortName;
+		    	vLongName = ntlLongName;
+		    }
 
+		    // Home team broadcast info
+		    JSONArray hTeamBroadcast = watchInfo.getJSONArray("hTeam");
+		    String hShortName = null;
+		    String hLongName = null;
+		    
+		    if(hTeamBroadcast.length() != 0)
+		    {
+			    JSONObject hTeamBroadcastObj = hTeamBroadcast.getJSONObject(0);
+			    hShortName = hTeamBroadcastObj.getString("shortName");
+			    hLongName = hTeamBroadcastObj.getString("longName");
+		    }
+		    else
+		    {
+		    	hShortName = ntlShortName;
+		    	hLongName = ntlLongName;
+		    }
 
+		    
 		    gameData = new GameData(Boolean.valueOf(isGameActivated), startTime, startDate, clock, (int)quarter, (Boolean)isHalfTime, (Boolean)isEndOfQuarter,
 		    						vTeamName.toString(), vWinRecord.toString(), vLossRecord.toString(), vScore.toString(), hTeamName.toString(), hWinRecord.toString(),
-		    						hLossRecord.toString(), hScore.toString(), vWatchShort.toString(), vWatchLong.toString(), hWatchShort.toString(), hWatchLong.toString());
-		    
-		    System.out.println(gameData.getvTeamAbrv());
+		    						hLossRecord.toString(), hScore.toString(), vShortName.toString(), vLongName, hShortName, hLongName);
+		    gameList.add(gameData);
 		}
 		
-		
-		
-		
+
+	    for(int i = 0; i < gameList.size(); i ++)
+	    {
+	    	//System.out.println(gameList.get(i).gethTeamAbrv() + " " + gameList.get(i).getQuarter() + " " + gameList.get(i).toString());
+	    	System.out.println(gameList.get(i).toString());
+	    }
 	}
 	
-
 }

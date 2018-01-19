@@ -199,9 +199,17 @@ public class GameData
 	{
 		this.hTeamWatchLong = hTeamWatchLong;
 	}
-	
+	@Override
 	public String toString()
 	{
-		return String.format("isGameActivated:%b, startTimeEastern:%s, startDateEastern:%s, clock:%s, current:%d, isHalfTime:%b, isEndOfPeriod:%b", isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter);
+		return "GameData [isGameActivated=" + isGameActivated + ", startTime=" + startTime + ", startDate=" + startDate
+				+ ", clock=" + clock + ", quarter=" + quarter + ", isHalfTime=" + isHalfTime + ", isEndOfQuarter="
+				+ isEndOfQuarter + ", vTeamAbrv=" + vTeamAbrv + ", vTeamWinRecord=" + vTeamWinRecord
+				+ ", vTeamLossRecord=" + vTeamLossRecord + ", vTeamScore=" + vTeamScore + ", hTeamAbrv=" + hTeamAbrv
+				+ ", hTeamWinRecord=" + hTeamWinRecord + ", hTeamLossRecord=" + hTeamLossRecord + ", hTeamScore="
+				+ hTeamScore + ", vTeamWatchShort=" + vTeamWatchShort + ", vTeamWatchLong=" + vTeamWatchLong
+				+ ", hTeamWatchShort=" + hTeamWatchShort + ", hTeamWatchLong=" + hTeamWatchLong + "]";
 	}
+	
+	
 }
