@@ -26,7 +26,7 @@ public class JSONReader
 		Date date = new Date();
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
 		urlDate = dateFormat.format(date);
-		String url = "https://data.nba.net/prod/v2/" + urlDate + "/scoreboard.json";
+		String jsonUrl = "https://data.nba.net/prod/v2/" + urlDate + "/scoreboard.json";
 		String jsonString = null;
 		String jsonStringFinal = null;
 		JSONArray array = null;
@@ -37,7 +37,7 @@ public class JSONReader
 
         // Show it.
 		
-		readUrl = new ReadURL(url);
+		readUrl = new ReadURL(jsonUrl);
 		readUrl.read();
 		jsonString = readUrl.getJsonString();
 		startIndex = jsonString.indexOf("\"games\"");
@@ -60,6 +60,7 @@ public class JSONReader
 		    
 			JSONObject obj = array.getJSONObject(i);
 
+			String gameIdNumber = obj.getString("gameId");
 			String isGameActivated = obj.getString("isGameActivated"); // game started
 			String startTime = obj.getString("startTimeEastern");	   // start time
 			String startDate = obj.getString("startDateEastern");	   // start date
@@ -138,13 +139,15 @@ public class JSONReader
 		    	hLongName = ntlLongName;
 		    }
 
-		    
-		    gameData = new GameData(Boolean.valueOf(isGameActivated), startTime, startDate, clock, (int)quarter, (Boolean)isHalfTime, (Boolean)isEndOfQuarter,
+		    gameData = new GameData(gameIdNumber, Boolean.valueOf(isGameActivated), startTime, startDate, clock, (int)quarter, (Boolean)isHalfTime, (Boolean)isEndOfQuarter,
 		    						vTeamName.toString(), vWinRecord.toString(), vLossRecord.toString(), vScore.toString(), hTeamName.toString(), hWinRecord.toString(),
 		    						hLossRecord.toString(), hScore.toString(), vShortName.toString(), vLongName, hShortName, hLongName);
 		    gameList.add(gameData);
 		}
 		
+		DatabaseDriver dbDriver = new DatabaseDriver(gameList);
+		dbDriver.connect("hoopsdb.cpsknmvlzyyf.us-east-2.rds.amazonaws.com", "3306", "Hoops", "JMontgomery", "81590Jim");
+		dbDriver.loadData();
 
 	    for(int i = 0; i < gameList.size(); i ++)
 	    {

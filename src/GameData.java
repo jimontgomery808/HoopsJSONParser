@@ -1,6 +1,7 @@
 
 public class GameData
 {
+	private String gameId;
 	private boolean isGameActivated;
 	private String startTime;
 	private String startDate;
@@ -22,11 +23,12 @@ public class GameData
 	private String hTeamWatchLong;
 	
 	
-	public GameData(boolean isGameActivated, String startTime, String startDate, String clock, int quarter,
+	public GameData(String gameId, boolean isGameActivated, String startTime, String startDate, String clock, int quarter,
 			boolean isHalfTime, boolean isEndOfQuarter, String vTeamAbrv, String vTeamWinRecord, String vTeamLossRecord,
 			String vTeamScore, String hTeamAbrv, String hTeamWinRecord, String hTeamLossRecord, String hTeamScore,
 			String vTeamWatchShort, String vTeamWatchLong, String hTeamWatchShort, String hTeamWatchLong)
 	{
+		this.gameId = gameId;
 		this.isGameActivated = isGameActivated;
 		this.startTime = startTime;
 		this.startDate = startDate;
@@ -47,6 +49,17 @@ public class GameData
 		this.hTeamWatchShort = hTeamWatchShort;
 		this.hTeamWatchLong = hTeamWatchLong;
 	}
+	
+	public String getGameId()
+	{
+		return gameId;
+	}
+
+	public void setGameId(String gameId)
+	{
+		this.gameId = gameId;
+	}
+
 	public boolean isGameActivated()
 	{
 		return isGameActivated;
@@ -202,13 +215,13 @@ public class GameData
 	@Override
 	public String toString()
 	{
-		return "GameData [isGameActivated=" + isGameActivated + ", startTime=" + startTime + ", startDate=" + startDate
+		return "GameData: gameId=" + gameId + ", isGameActivated=" + isGameActivated + ", startTime=" + startTime + ", startDate=" + startDate
 				+ ", clock=" + clock + ", quarter=" + quarter + ", isHalfTime=" + isHalfTime + ", isEndOfQuarter="
 				+ isEndOfQuarter + ", vTeamAbrv=" + vTeamAbrv + ", vTeamWinRecord=" + vTeamWinRecord
 				+ ", vTeamLossRecord=" + vTeamLossRecord + ", vTeamScore=" + vTeamScore + ", hTeamAbrv=" + hTeamAbrv
 				+ ", hTeamWinRecord=" + hTeamWinRecord + ", hTeamLossRecord=" + hTeamLossRecord + ", hTeamScore="
 				+ hTeamScore + ", vTeamWatchShort=" + vTeamWatchShort + ", vTeamWatchLong=" + vTeamWatchLong
-				+ ", hTeamWatchShort=" + hTeamWatchShort + ", hTeamWatchLong=" + hTeamWatchLong + "]";
+				+ ", hTeamWatchShort=" + hTeamWatchShort + ", hTeamWatchLong=" + hTeamWatchLong;
 	}
 	
 	
