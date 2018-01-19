@@ -14,6 +14,18 @@ public class DatabaseDriver
 {
 	private List<GameData> gameListDB = new ArrayList<GameData>();
 	private Connection myConnection;
+	private PreparedStatement statement;
+	private String myStatement = "insert into current_games (gameId, isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter,"
+            + "vTeamAbrv, vWinRecord, vLossRecord, vTeamScore, hTeamAbrv, hWinRecord, hLossRecord, "
+            + "hTeamScore, vTeamWatchShort, vTeamWatchLong, hTeamWatchShort, hTeamWatchLong) "
+            + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+            + "on duplicate key update "
+            + "gameID = values(gameId), isGameActivated = values(isGameActivated), startTime = values(startTime),"
+            + "startDate = values(startDate), clock = values(clock), quarter = values(quarter), isHalfTime = values(isHalfTime),"
+            + "isEndOfQuarter = values(isEndOfQuarter), vTeamAbrv = values(vTeamAbrv), vWinRecord = values(vWinRecord),"
+            + "vLossRecord =  values(vLossRecord), vTeamScore = values(vTeamScore), hTeamAbrv = values(hTeamAbrv), hWinRecord = values(hWinRecord),"
+            + "hLossRecord = values(hLossRecord), hTeamScore = values(hTeamScore), vTeamWatchShort = values(vTeamWatchShort),"
+            + "vTeamWatchLong = values(vTeamWatchLong), hTeamWatchShort = values(hTeamWatchShort), hTeamWatchLong = values(hTeamWatchLong)";
 	
 	public DatabaseDriver(List<GameData> gameListDB)
 	{
@@ -36,18 +48,7 @@ public class DatabaseDriver
 	
 	public void loadData()
 	{
-		String myStatement = "insert into current_games (gameId, isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter,"
-				                                         + "vTeamAbrv, vWinRecord, vLossRecord, vTeamScore, hTeamAbrv, hWinRecord, hLossRecord, "
-				                                         + "hTeamScore, vTeamWatchShort, vTeamWatchLong, hTeamWatchShort, hTeamWatchLong) "
-				                                         + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-				                                         + "on duplicate key update "
-				                                         + "gameID = values(gameId), isGameActivated = values(isGameActivated), startTime = values(startTime),"
-				                                         + "startDate = values(startDate), clock = values(clock), quarter = values(quarter), isHalfTime = values(isHalfTime),"
-				                                         + "isEndOfQuarter = values(isEndOfQuarter), vTeamAbrv = values(vTeamAbrv), vWinRecord = values(vWinRecord),"
-				                                         + "vLossRecord =  values(vLossRecord), vTeamScore = values(vTeamScore), hTeamAbrv = values(hTeamAbrv), hWinRecord = values(hWinRecord),"
-				                                         + "hLossRecord = values(hLossRecord), hTeamScore = values(hTeamScore), vTeamWatchShort = values(vTeamWatchShort),"
-				                                         + "vTeamWatchLong = values(vTeamWatchLong), hTeamWatchShort = values(hTeamWatchShort), hTeamWatchLong = values(hTeamWatchLong)";
-		PreparedStatement statement;
+
 		for(int i = 0; i < gameListDB.size(); i ++)
 		{
 			try
@@ -72,7 +73,6 @@ public class DatabaseDriver
 				statement.setString(16, data.gethTeamScore());
 				statement.setString(17, data.getvTeamWatchShort());
 				statement.setString(18, data.getvTeamWatchLong());
-				System.out.println(data.getvTeamWatchLong());
 				statement.setString(19, data.gethTeamWatchShort());
 				statement.setString(20, data.gethTeamWatchLong());
 				

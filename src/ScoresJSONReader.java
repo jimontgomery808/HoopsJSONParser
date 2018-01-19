@@ -16,34 +16,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class JSONReader
+public class ScoresJSONReader
 {
-	
-	public static void main(String[] args) throws JSONException
-	{
-		ReadURL readUrl;
-		String urlDate;
-		Date date = new Date();
-		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-		urlDate = dateFormat.format(date);
-		String jsonUrl = "https://data.nba.net/prod/v2/" + urlDate + "/scoreboard.json";
-		String jsonString = null;
-		String jsonStringFinal = null;
-		JSONArray array = null;
-		GameData gameData;
-		int numGames;
-		int startIndex;
-		List<GameData> gameList = new ArrayList<GameData>();
+	private ReadURL readUrl;
+	private String urlDate;
+	private Date date = new Date();
+	private DateFormat dateFormat;
+	private String jsonUrl;
+	private String jsonString = null;
+	private String jsonStringFinal = null;
+	private JSONArray array = null;
+	private GameData gameData;
+	private int startIndex;
+	private List<GameData> gameList = new ArrayList<GameData>();
 
-        // Show it.
-		
+    // Show it.
+	public ScoresJSONReader()
+	{
+		dateFormat = new SimpleDateFormat("yyyyMMdd");
+		urlDate = dateFormat.format(date);
+		jsonUrl = "https://data.nba.net/prod/v2/" + urlDate + "/scoreboard.json";
+	}
+	public void readData() throws JSONException
+	{
 		readUrl = new ReadURL(jsonUrl);
 		readUrl.read();
 		jsonString = readUrl.getJsonString();
 		startIndex = jsonString.indexOf("\"games\"");
 		jsonStringFinal = jsonString.substring(startIndex + 8, jsonString.length()-2);
-		
-		
 		
 		try
 		{
@@ -54,12 +54,11 @@ public class JSONReader
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		for(int i = 0; i < array.length(); i ++)
 		{
 		    
 			JSONObject obj = array.getJSONObject(i);
-
+	
 			String gameIdNumber = obj.getString("gameId");
 			String isGameActivated = obj.getString("isGameActivated"); // game started
 			String startTime = obj.getString("startTimeEastern");	   // start time
@@ -70,7 +69,7 @@ public class JSONReader
 			Object quarter = quarterInfo.get("current");			   // quarter #
 			Object isHalfTime = quarterInfo.get("isHalftime");		   // half time
 			Object isEndOfQuarter = quarterInfo.get("isEndOfPeriod");  // end of quarter
-
+	
 			JSONObject vTeam = obj.getJSONObject("vTeam");			   // visiting team JSON Object
 		    Object vTeamName = vTeam.get("triCode");				   // team name
 		    Object vWinRecord = vTeam.get("win");					   // # wins
@@ -121,7 +120,7 @@ public class JSONReader
 		    	vShortName = ntlShortName;
 		    	vLongName = ntlLongName;
 		    }
-
+	
 		    // Home team broadcast info
 		    JSONArray hTeamBroadcast = watchInfo.getJSONArray("hTeam");
 		    String hShortName = null;
@@ -138,22 +137,28 @@ public class JSONReader
 		    	hShortName = ntlShortName;
 		    	hLongName = ntlLongName;
 		    }
-
+	
 		    gameData = new GameData(gameIdNumber, Boolean.valueOf(isGameActivated), startTime, startDate, clock, (int)quarter, (Boolean)isHalfTime, (Boolean)isEndOfQuarter,
 		    						vTeamName.toString(), vWinRecord.toString(), vLossRecord.toString(), vScore.toString(), hTeamName.toString(), hWinRecord.toString(),
 		    						hLossRecord.toString(), hScore.toString(), vShortName.toString(), vLongName, hShortName, hLongName);
 		    gameList.add(gameData);
 		}
 		
+	}
+	
+	public void sendData()
+	{
 		DatabaseDriver dbDriver = new DatabaseDriver(gameList);
 		dbDriver.connect("hoopsdb.cpsknmvlzyyf.us-east-2.rds.amazonaws.com", "3306", "Hoops", "JMontgomery", "81590Jim");
 		dbDriver.loadData();
-
+	}
+	
+	public void printJSON()
+	{
 	    for(int i = 0; i < gameList.size(); i ++)
 	    {
-	    	//System.out.println(gameList.get(i).gethTeamAbrv() + " " + gameList.get(i).getQuarter() + " " + gameList.get(i).toString());
 	    	System.out.println(gameList.get(i).toString());
 	    }
 	}
-	
 }
+
