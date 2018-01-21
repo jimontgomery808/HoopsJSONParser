@@ -34,14 +34,16 @@ public class DatabaseDriver
 
 	public void connect(String hostName, String port, String dbName, String userName, String password)
 	{
-		String jdbcUrl = "jdbc:mysql://" + hostName + ":" + port + "/" + dbName + "?user=" + userName + "&password=" + password;
+		String jdbcUrl = "jdbc:mysql://" + hostName + ":" + port + "/" + dbName;
 		try
 		{
-			myConnection = DriverManager.getConnection(jdbcUrl);
+			// ec2 DB
+			myConnection = DriverManager.getConnection(jdbcUrl, userName, password);
+			//myConnection = DriverManager.getConnection("jdbc:mysql://ec2-52-14-204-231.us-east-2.compute.amazonaws.com:3306/HoopsDB?useSSL=false", "root", "root");
 		} 
 		catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
+			System.out.println("CONNECTION FAILED!");
 			e.printStackTrace();
 		}
 	}

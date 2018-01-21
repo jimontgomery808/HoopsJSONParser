@@ -18,9 +18,7 @@ public class TimedTask extends TimerTask
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		reader.sendData();	
-		reader.printJSON();
-		System.out.println("Running...");
+		reader.sendData();
 	}
 
 }

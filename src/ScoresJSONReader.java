@@ -149,7 +149,7 @@ public class ScoresJSONReader
 	public void sendData()
 	{
 		DatabaseDriver dbDriver = new DatabaseDriver(gameList);
-		dbDriver.connect("hoopsdb.cpsknmvlzyyf.us-east-2.rds.amazonaws.com", "3306", "Hoops", "JMontgomery", "81590Jim");
+		dbDriver.connect("ec2-52-14-204-231.us-east-2.compute.amazonaws.com", "3306", "HoopsDB?useSSL=false", "root", "root");
 		dbDriver.loadData();
 	}
 	
