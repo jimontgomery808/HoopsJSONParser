@@ -37,6 +37,14 @@ public class ScoresJSONReader
 		urlDate = dateFormat.format(date);
 		jsonUrl = "https://data.nba.net/prod/v2/" + urlDate + "/scoreboard.json";
 	}
+	public ScoresJSONReader(String date)
+	{
+		jsonUrl = "https://data.nba.net/prod/v2/" + date + "/scoreboard.json";
+	}
+	public String getDate()
+	{
+		return urlDate;
+	}
 	public void readData() throws JSONException
 	{
 		readUrl = new ReadURL(jsonUrl);
