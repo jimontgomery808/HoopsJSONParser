@@ -15,7 +15,7 @@ public class DatabaseDriver
 	private List<GameData> gameListDB = new ArrayList<GameData>();
 	private Connection myConnection;
 	private PreparedStatement statement;
-	private String myStatement = "insert into past_games (gameId, isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter,"
+	private String myStatement = "insert into all_scoreboards (gameId, isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter,"
             + "vTeamAbrv, vWinRecord, vLossRecord, vTeamScore, hTeamAbrv, hWinRecord, hLossRecord, "
             + "hTeamScore, vTeamWatchShort, vTeamWatchLong, hTeamWatchShort, hTeamWatchLong) "
             + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"

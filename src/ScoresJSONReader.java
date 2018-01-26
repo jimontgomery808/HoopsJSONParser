@@ -18,6 +18,12 @@ import org.json.JSONObject;
 
 public class ScoresJSONReader
 {
+	private final String HOST = "ec2-52-14-204-231.us-east-2.compute.amazonaws.com";
+	private final String PORT = "3306";
+	private final String DATABASE = "HoopsDB?useSSL=false";
+	private final String USER = "jimontgomery";
+	private final String PASSOWRD = "8159081590Jim";
+	
 	private ReadURL readUrl;
 	private String urlDate;
 	private Date date = new Date();
@@ -157,7 +163,7 @@ public class ScoresJSONReader
 	public void sendData()
 	{
 		DatabaseDriver dbDriver = new DatabaseDriver(gameList);
-		dbDriver.connect("ec2-52-14-204-231.us-east-2.compute.amazonaws.com", "3306", "HoopsDB?useSSL=false", "root", "root");
+		dbDriver.connect(HOST, PORT, DATABASE, USER, PASSOWRD);
 		dbDriver.loadData();
 	}
 	
