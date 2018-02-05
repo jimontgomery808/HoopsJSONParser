@@ -22,7 +22,7 @@ public class MainDriver
 	{
 		System.out.println(executeString);
 		Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new TimedTask(), 0, 50000);
+		timer.scheduleAtFixedRate(new TimedTask(), 0, 5000);
 	}
 	public static void fillFutureGames()
 	{
@@ -55,7 +55,7 @@ public class MainDriver
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		Calendar cal = Calendar.getInstance();
 		  // number of days to add 
-		for(int i = 117; i > 0; i --)
+		for(int i = 30; i > 0; i --)
 		{
 			cal.add(cal.DAY_OF_MONTH, -1);
 			Date nextDay = cal.getTime();
