@@ -14,8 +14,17 @@ public class MainDriver
 	static String executeString = "Running...";
 	public static void main(String[] args) throws ParseException
 	{
-		currentGames();
-		//fillPastGames();
+//		PlayersJSONReader players = new PlayersJSONReader();
+//		try
+//		{
+//			players.readData();
+//		} catch (JSONException e)
+//		{
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		//currentGames();
+		fillPastGames();
 		//fillFutureGames();
 	}
 	public static void currentGames()
@@ -55,7 +64,7 @@ public class MainDriver
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		Calendar cal = Calendar.getInstance();
 		  // number of days to add 
-		for(int i = 30; i > 0; i --)
+		for(int i = 10; i > 0; i --)
 		{
 			cal.add(cal.DAY_OF_MONTH, -1);
 			Date nextDay = cal.getTime();

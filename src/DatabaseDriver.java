@@ -15,7 +15,8 @@ public class DatabaseDriver
 	private List<GameData> gameListDB = new ArrayList<GameData>();
 	private Connection myConnection;
 	private PreparedStatement statement;
-	private String myStatement = "insert into all_scoreboards (gameId, isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter,"
+	private final String INSERT_INTO_PLAYERS = "";
+	private final String INSERT_INTO_ALL_SCOREBOARDS = "insert into all_scoreboards (gameId, isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter,"
             + "vTeamAbrv, vWinRecord, vLossRecord, vTeamScore, hTeamAbrv, hWinRecord, hLossRecord, "
             + "hTeamScore, vTeamWatchShort, vTeamWatchLong, hTeamWatchShort, hTeamWatchLong) "
             + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
@@ -48,9 +49,24 @@ public class DatabaseDriver
 		}
 	}
 	
-	public void loadData()
+	public String getStatement(String queryType)
 	{
-
+		String query = "";
+		switch(queryType)
+		{
+			case "SCOREBOARDS": query = INSERT_INTO_ALL_SCOREBOARDS;
+				break;
+			case "PLAYERS": query = INSERT_INTO_PLAYERS;
+				break;
+		}
+		
+		return query;
+	}
+	
+	public void loadData(String query)
+	{
+		String myStatement = getStatement(query);
+		
 		for(int i = 0; i < gameListDB.size(); i ++)
 		{
 			try

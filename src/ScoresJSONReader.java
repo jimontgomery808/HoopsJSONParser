@@ -164,7 +164,7 @@ public class ScoresJSONReader
 	{
 		DatabaseDriver dbDriver = new DatabaseDriver(gameList);
 		dbDriver.connect(HOST, PORT, DATABASE, USER, PASSOWRD);
-		dbDriver.loadData();
+		dbDriver.loadData("SCOREBOARDS");
 	}
 	
 	public void printJSON()
