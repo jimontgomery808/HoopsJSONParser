@@ -13,9 +13,16 @@ import java.util.List;
 public class DatabaseDriver
 {
 	private List<GameData> gameListDB = new ArrayList<GameData>();
+	private List<Player> playerListDB = new ArrayList<Player>();
 	private Connection myConnection;
 	private PreparedStatement statement;
-	private final String INSERT_INTO_PLAYERS = "";
+	private final String INSERT_INTO_PLAYERS = "insert into players (first_name, last_name, jersey_number, player_position, height_feet, height_inches, player_weight, player_id,"
+            + "team, allStar) "
+            + "values(?,?,?,?,?,?,?,?,?,?) "
+            + "on duplicate key update "
+            + "first_name = values(first_name), last_name = values(last_name), player_position = values(player_position), height_feet = values(height_feet), "
+            + "height_inches = values(height_inches), player_weight = values(player_weight), player_id = values(player_id), allStar = values(allStar)";
+	
 	private final String INSERT_INTO_ALL_SCOREBOARDS = "insert into all_scoreboards (gameId, isGameActivated, startTime, startDate, clock, quarter, isHalfTime, isEndOfQuarter,"
             + "vTeamAbrv, vWinRecord, vLossRecord, vTeamScore, hTeamAbrv, hWinRecord, hLossRecord, "
             + "hTeamScore, vTeamWatchShort, vTeamWatchLong, hTeamWatchShort, hTeamWatchLong) "
@@ -27,12 +34,15 @@ public class DatabaseDriver
             + "vLossRecord =  values(vLossRecord), vTeamScore = values(vTeamScore), hTeamAbrv = values(hTeamAbrv), hWinRecord = values(hWinRecord),"
             + "hLossRecord = values(hLossRecord), hTeamScore = values(hTeamScore), vTeamWatchShort = values(vTeamWatchShort),"
             + "vTeamWatchLong = values(vTeamWatchLong), hTeamWatchShort = values(hTeamWatchShort), hTeamWatchLong = values(hTeamWatchLong)";
-	
-	public DatabaseDriver(List<GameData> gameListDB)
+
+	public void setGameData(List<GameData> gameListDB)
 	{
 		this.gameListDB = gameListDB;
 	}
-
+	public void setPlayerData(List<Player> playerListDB)
+	{
+		this.playerListDB = playerListDB;
+	}
 	public void connect(String hostName, String port, String dbName, String userName, String password)
 	{
 		String jdbcUrl = "jdbc:mysql://" + hostName + ":" + port + "/" + dbName;
@@ -48,24 +58,40 @@ public class DatabaseDriver
 			e.printStackTrace();
 		}
 	}
-	
-	public String getStatement(String queryType)
+
+	public void loadPlayerData()
 	{
-		String query = "";
-		switch(queryType)
+		String myStatement = INSERT_INTO_PLAYERS;
+		for(int i = 0; i < playerListDB.size(); i ++)
 		{
-			case "SCOREBOARDS": query = INSERT_INTO_ALL_SCOREBOARDS;
-				break;
-			case "PLAYERS": query = INSERT_INTO_PLAYERS;
-				break;
+			System.out.println(i);
+			try
+			{
+				Player data = playerListDB.get(i);
+				statement= myConnection.prepareStatement(myStatement);
+				statement.setString(1, data.getFirstName());
+				statement.setString(2, data.getLastName());
+				statement.setString(3, data.getNumber());
+				statement.setString(4,data.getPosition());
+				statement.setString(5, data.getHeightFeet());
+				statement.setString(6, data.getHeightInches());
+				statement.setString(7, data.getWeight());
+				statement.setString(8, data.getId());
+				statement.setString(9, data.getTeam());
+				statement.setBoolean(10, data.isAllStar());
+				
+				statement.execute();
+			}
+			catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
-		return query;
 	}
-	
-	public void loadData(String query)
+	public void loadGameData()
 	{
-		String myStatement = getStatement(query);
+		String myStatement = INSERT_INTO_ALL_SCOREBOARDS;
 		
 		for(int i = 0; i < gameListDB.size(); i ++)
 		{

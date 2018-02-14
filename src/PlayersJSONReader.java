@@ -26,7 +26,7 @@ public class PlayersJSONReader
 	private JSONArray jsonArray = null;
 	private GameData gameData;
 	private int startIndex;
-	private List<GameData> gameList = new ArrayList<GameData>();
+	private List<Player> playerList = new ArrayList<Player>();
 
 	
 	public PlayersJSONReader()
@@ -42,7 +42,6 @@ public class PlayersJSONReader
 		readUrl = new ReadURL(jsonUrl);
 		readUrl.read();
 		jsonString = readUrl.getJsonString();
-		System.out.print(jsonString);
 		
 		try
 		{
@@ -68,26 +67,32 @@ public class PlayersJSONReader
 			String id = obj.getString("personId");
 			
 			JSONObject teamObject = obj.getJSONObject("teamData");
+			String team = teamObject.getString("tricode");
 			
+			String allStar = obj.getString("isAllStar");
 			
-			System.out.println(firstName + ", " + lastName + ", " + number + ", " + position + ", " + heightFeet + "'" + heightInches
-					         + ", " + weight + ", " + id);
+			Player player = new Player(firstName, lastName, number, position, heightFeet, heightInches, weight, id, team, Boolean.valueOf(allStar));
+			
+			playerList.add(player);
+//			System.out.println(firstName + ", " + lastName + ", " + number + ", " + position + ", " + heightFeet + "'" + heightInches
+//					         + ", " + weight + ", " + id + ", " + team + ", " + allStar);
 		}
 		
 	}
 	
 	public void sendData()
 	{
-		DatabaseDriver dbDriver = new DatabaseDriver(gameList);
+		DatabaseDriver dbDriver = new DatabaseDriver();
+		dbDriver.setPlayerData(playerList);
 		dbDriver.connect(HOST, PORT, DATABASE, USER, PASSOWRD);
-		dbDriver.loadData("PLAYERS");
+		dbDriver.loadPlayerData();
 	}
 	
 	public void printJSON()
 	{
-	    for(int i = 0; i < gameList.size(); i ++)
+	    for(int i = 0; i < playerList.size(); i ++)
 	    {
-	    	System.out.println(gameList.get(i).toString());
+	    	System.out.println(playerList.get(i).toString());
 	    }
 	}
 }

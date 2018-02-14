@@ -12,19 +12,14 @@ import org.json.JSONException;
 public class MainDriver
 {
 	static String executeString = "Running...";
-	public static void main(String[] args) throws ParseException
+	public static void main(String[] args) throws ParseException, JSONException
 	{
-//		PlayersJSONReader players = new PlayersJSONReader();
-//		try
-//		{
-//			players.readData();
-//		} catch (JSONException e)
-//		{
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		PlayersJSONReader players = new PlayersJSONReader();
+		players.readData();
+		players.sendData();
+		
 		//currentGames();
-		fillPastGames();
+		//fillPastGames();
 		//fillFutureGames();
 	}
 	public static void currentGames()

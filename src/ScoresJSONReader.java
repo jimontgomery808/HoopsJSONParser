@@ -162,9 +162,10 @@ public class ScoresJSONReader
 	
 	public void sendData()
 	{
-		DatabaseDriver dbDriver = new DatabaseDriver(gameList);
+		DatabaseDriver dbDriver = new DatabaseDriver();
+		dbDriver.setGameData(gameList);
 		dbDriver.connect(HOST, PORT, DATABASE, USER, PASSOWRD);
-		dbDriver.loadData("SCOREBOARDS");
+		dbDriver.loadGameData();
 	}
 	
 	public void printJSON()
