@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class PlayersJSONReader
 		
 	}
 	
-	public void sendData()
+	public void sendData() throws SQLException
 	{
 		DatabaseDriver dbDriver = new DatabaseDriver();
 		dbDriver.setPlayerData(playerList);

@@ -1,3 +1,4 @@
+import java.sql.SQLException;
 import java.util.TimerTask;
 
 import org.json.JSONException;
@@ -17,8 +18,19 @@ public class TimedTask extends TimerTask
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		reader.sendData();
+		try
+		{
+			reader.sendData();
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

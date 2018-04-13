@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,11 @@ public class ScoresJSONReader
 	private GameData gameData;
 	private int startIndex;
 	private List<GameData> gameList = new ArrayList<GameData>();
+	private List<BoxScore> boxscoresList = new ArrayList<BoxScore>();
+	private BoxscoreJSONReader bsReader;
+	private List<String> gameIds = new ArrayList<String>();
+	private List<String> dates = new ArrayList<String>();
+	private boolean hasGames;
 
     // Show it.
 	public ScoresJSONReader()
@@ -42,16 +48,30 @@ public class ScoresJSONReader
 		dateFormat = new SimpleDateFormat("yyyyMMdd");
 		urlDate = dateFormat.format(date);
 		jsonUrl = "https://data.nba.net/prod/v2/" + urlDate + "/scoreboard.json";
+		hasGames = true;
 	}
 	public ScoresJSONReader(String date)
 	{
 		jsonUrl = "https://data.nba.net/prod/v2/" + date + "/scoreboard.json";
+		hasGames = true;
 	}
 	public String getDate()
 	{
 		return urlDate;
 	}
-	public void readData() throws JSONException
+	public List<String> getIds()
+	{
+		return gameIds;
+	}
+	public List<String> getDates()
+	{
+		return dates;
+	}
+	public boolean hasGames()
+	{
+		return hasGames;
+	}
+	public void readData() throws JSONException, SQLException
 	{
 		readUrl = new ReadURL(jsonUrl);
 		readUrl.read();
@@ -62,7 +82,10 @@ public class ScoresJSONReader
 		try
 		{
 			array = new JSONArray(jsonStringFinal);
-		} 
+			
+			if(array.length() == 0)
+				hasGames = false;
+		}
 		catch (JSONException e)
 		{
 			// TODO Auto-generated catch block
@@ -151,7 +174,19 @@ public class ScoresJSONReader
 		    	hShortName = ntlShortName;
 		    	hLongName = ntlLongName;
 		    }
-	
+		    if(isGameActivated.equals("true"))
+		    {
+			    bsReader = new BoxscoreJSONReader(urlDate, gameIdNumber);
+			    bsReader.readData();
+			    boxscoresList.addAll(bsReader.getBSList());
+		    }
+		    
+		    gameIds.add(gameIdNumber);
+		    dates.add(startDate);
+		    BoxscoreJSONReader bs = new BoxscoreJSONReader(startDate, gameIdNumber);
+		    bs.readData();
+		    bs.sendData();
+		    
 		    gameData = new GameData(gameIdNumber, Boolean.valueOf(isGameActivated), startTime, startDate, clock, (int)quarter, (Boolean)isHalfTime, (Boolean)isEndOfQuarter,
 		    						vTeamName.toString(), vWinRecord.toString(), vLossRecord.toString(), vScore.toString(), hTeamName.toString(), hWinRecord.toString(),
 		    						hLossRecord.toString(), hScore.toString(), vShortName.toString(), vLongName, hShortName, hLongName);
@@ -160,12 +195,12 @@ public class ScoresJSONReader
 		
 	}
 	
-	public void sendData()
+	public void sendData() throws SQLException
 	{
-		DatabaseDriver dbDriver = new DatabaseDriver();
-		dbDriver.setGameData(gameList);
-		dbDriver.connect(HOST, PORT, DATABASE, USER, PASSOWRD);
-		dbDriver.loadGameData();
+		DatabaseDriver scoreboardDB = new DatabaseDriver();
+		scoreboardDB.setGameData(gameList);
+		scoreboardDB.connect(HOST, PORT, DATABASE, USER, PASSOWRD);
+		scoreboardDB.loadGameData();		
 	}
 	
 	public void printJSON()
