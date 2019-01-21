@@ -10,11 +10,11 @@ import org.json.JSONObject;
 
 public class BoxscoreJSONReader
 {
-	private final String HOST = "ec2-52-14-204-231.us-east-2.compute.amazonaws.com";
+	private final String HOST = "";
 	private final String PORT = "3306";
 	private final String DATABASE = "HoopsDB?useSSL=false";
-	private final String USER = "jimontgomery";
-	private final String PASSOWRD = "8159081590Jim";
+	private final String USER = "";
+	private final String PASSOWRD = "";
 	
 	private ReadURL readUrl;
 	private String jsonUrl;
